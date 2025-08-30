@@ -166,221 +166,9 @@
         </p>
         <section itemprop="entry-text">
           <br>
-          <!-- <div class="container">
-            <center>
-              <p><a href="">[Paper on ArXiv]</a>&nbsp;&nbsp;&nbsp;&nbsp;<a
-                  href="https://github.com/NKU-HLT/AudioEditor">[Code on GitHub]</a></p>
+    
 
-            </center>
-          </div> -->
-
-          <!-- <div class="video-container">
-            <video id="videoPlayer" controls autoplay muted>
-              <source src="./video/video1.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-            <div class="video-controls">
-              <button onclick="changeVideo(-1)">&#9664;</button>
-              <button onclick="changeVideo(1)">&#9654;</button>
-            </div>
-          </div>
-          
-          <script>
-            const videoPlayer = document.getElementById('videoPlayer');
-            const videos = [
-              './video/video1.mp4',
-              './video/video2.mp4'
-            ];
-            let currentVideoIndex = 0;
-          
-            function changeVideo(direction) {
-              currentVideoIndex += direction;
-              if (currentVideoIndex < 0) {
-                currentVideoIndex = videos.length - 1;
-              } else if (currentVideoIndex >= videos.length) {
-                currentVideoIndex = 0;
-              }
-              videoPlayer.src = videos[currentVideoIndex];
-              videoPlayer.load();
-              videoPlayer.play();
-            }
-          </script>
-          
-          <style>
-            .video-container {
-              position: relative;
-              width: 1920px; /* 或者你想要的任何宽度 */
-              max-width: 1920px;
-              margin: 0 auto;
-              text-align: center;
-            }
-            
-            #videoPlayer {
-              width: 100%;
-              height: auto;
-            }
-            
-            .video-controls {
-              position: absolute;
-              top: 50%;
-              left: 0;
-              right: 0;
-              transform: translateY(-50%);
-              display: flex;
-              justify-content: space-between;
-              padding: 0 10px;
-            }
-            
-            .video-controls button {
-              background: rgba(0, 0, 0, 0.5);
-              border: none;
-              color: white;
-              font-size: 2em;
-              cursor: pointer;
-              padding: 10px;
-              border-radius: 50%;
-              line-height: 1;
-            }
-            
-            .video-controls button:hover {
-              background: rgba(0, 0, 0, 0.8);
-            }
-          </style> -->
-
-
-
-
-          <!-- <div class="video-carousel-wrapper">
-            <div class="video-carousel-container">
-              <video class="video-item" controls muted loop>
-                <source src="./video/video1.mp4" type="video/mp4">
-              </video>
-              <video class="video-item" controls muted loop>
-                <source src="./video/video2.mp4" type="video/mp4">
-              </video>
-              </div>
-            <div class="video-controls">
-              <button onclick="changeVideo(-1)">&#9664;</button>
-              <button onclick="changeVideo(1)">&#9654;</button>
-            </div>
-          </div>
-          
-          <script>
-            const carouselContainer = document.querySelector('.video-carousel-container');
-            const videos = document.querySelectorAll('.video-item');
-            let currentVideoIndex = 0;
-            let autoplayInterval;
-          
-            // 根据当前索引，设置容器的平移位置
-            function updateCarousel() {
-              // 平移距离 = (当前索引 * 100) + 偏移量（使当前视频居中）
-              const offset = currentVideoIndex * 100;
-              carouselContainer.style.transform = `translateX(-${offset}%)`;
-          
-              // 播放/暂停视频
-              videos.forEach((video, index) => {
-                if (index === currentVideoIndex) {
-                  // 主视频：取消静音，并播放
-                  video.muted = false;
-                  video.play();
-                } else {
-                  // 旁边视频：静音，并暂停
-                  video.muted = true;
-                  video.pause();
-                }
-              });
-            }
-          
-            // 切换视频
-            function changeVideo(direction) {
-              currentVideoIndex += direction;
-              
-              // 实现循环切换
-              if (currentVideoIndex < 0) {
-                currentVideoIndex = videos.length - 1;
-              } else if (currentVideoIndex >= videos.length) {
-                currentVideoIndex = 0;
-              }
-          
-              updateCarousel();
-              
-              // 重置自动播放计时器
-              clearInterval(autoplayInterval);
-              startAutoplay();
-            }
-          
-            // 开始自动播放
-            function startAutoplay() {
-              autoplayInterval = setInterval(() => {
-                changeVideo(1);
-              }, 5000); // 5秒后自动切换
-            }
-          
-            // 页面加载时执行
-            window.onload = () => {
-              updateCarousel();
-              startAutoplay();
-            };
-          </script>
-          
-          <style>
-            /* 外层容器：设置显示区域 */
-            .video-carousel-wrapper {
-              position: relative;
-              width: 80%; /* 占屏幕宽度的80% */
-              max-width: 1920px;
-              margin: 0 auto;
-              overflow: hidden; /* 隐藏超出容器的视频 */
-            }
-          
-            /* 内层容器：存放所有视频 */
-            .video-carousel-container {
-              display: flex; /* 让视频并排排列 */
-              width: 100%; /* 宽度由里面的视频自动撑开 */
-              transition: transform 0.5s ease-in-out; /* 添加平滑过渡效果 */
-            }
-          
-            /* 每个视频元素 */
-            .video-item {
-              min-width: 100%; /* 确保每个视频项的宽度为100% */
-              height: auto;
-            }
-          
-            /* 视频切换按钮 */
-            .video-controls {
-              position: absolute;
-              top: 50%;
-              left: 0;
-              right: 0;
-              transform: translateY(-50%);
-              display: flex;
-              justify-content: space-between;
-              padding: 0 10px;
-              pointer-events: none; /* 让按钮可以穿透 */
-            }
-            
-            .video-controls button {
-              pointer-events: auto; /* 恢复按钮的点击事件 */
-              background: rgba(0, 0, 0, 0.5);
-              border: none;
-              color: white;
-              font-size: 2em;
-              cursor: pointer;
-              padding: 10px;
-              border-radius: 50%;
-              line-height: 1;
-            }
-            
-            .video-controls button:hover {
-              background: rgba(0, 0, 0, 0.8);
-            }
-          </style> -->
-
-
-
-
-
-          <div class="video-carousel-container">
+          <!-- <div class="video-carousel-container">
             <div class="video-carousel-strip" id="videoStrip">
               <video class="video-item" controls muted loop>
                 <source src="./video/video1.mp4" type="video/mp4">
@@ -465,12 +253,108 @@
               height: auto;
               margin: 0 15px;
             }
+          </style> -->
+
+          <div class="video-carousel-container">
+            <div class="video-carousel-strip" id="videoStrip">
+              <video class="video-item" controls muted loop>
+                <source src="./video/video1.mp4" type="video/mp4">
+              </video>
+              <video class="video-item" controls muted loop>
+                <source src="./video/video2.mp4" type="video/mp4">
+              </video>
+              <video class="video-item" controls muted loop>
+                <source src="./video/video1.mp4" type="video/mp4">
+              </video>
+              <video class="video-item" controls muted loop>
+                <source src="./video/video2.mp4" type="video/mp4">
+              </video>
+              <video class="video-item" controls muted loop>
+                <source src="./video/video1.mp4" type="video/mp4">
+              </video>
+              </div>
+            <div class="video-controls">
+              <button onclick="moveCarousel(-1)">&#9664;</button>
+              <button onclick="moveCarousel(1)">&#9654;</button>
+            </div>
+          </div>
+          
+          <script>
+            const videoStrip = document.getElementById('videoStrip');
+            const videos = document.querySelectorAll('.video-item');
+            const videoWidth = 800; // 每个视频的宽度，需要与CSS保持一致
+            const videoMargin = 15; // 视频之间的间距，需要与CSS保持一致
+            let currentVideoIndex = 0;
+          
+            function moveCarousel(direction) {
+              currentVideoIndex += direction;
+          
+              if (currentVideoIndex < 0) {
+                currentVideoIndex = videos.length - 1;
+              } else if (currentVideoIndex >= videos.length) {
+                currentVideoIndex = 0;
+              }
+          
+              const offset = (videoWidth + videoMargin * 2) * currentVideoIndex;
+              videoStrip.style.transform = `translateX(-${offset}px)`;
+            }
+            
+            // 页面加载后自动播放所有视频
+            window.onload = () => {
+              videos.forEach(video => {
+                video.play();
+              });
+            };
+          </script>
+          
+          <style>
+            /* 容器：限制可见区域 */
+            .video-carousel-container {
+              position: relative;
+              width: 100%;
+              overflow: hidden;
+            }
+          
+            /* 视频条带：所有视频的容器 */
+            .video-carousel-strip {
+              display: flex;
+              transition: transform 0.5s ease-in-out; /* 平滑的滑动效果 */
+            }
+          
+            /* 每个视频元素 */
+            .video-item {
+              width: 800px;
+              height: auto;
+              margin: 0 15px; /* 视频之间的间距 */
+            }
+          
+            /* 切换按钮 */
+            .video-controls {
+              position: absolute;
+              top: 50%;
+              left: 0;
+              right: 0;
+              transform: translateY(-50%);
+              display: flex;
+              justify-content: space-between;
+              pointer-events: none;
+            }
+          
+            .video-controls button {
+              pointer-events: auto;
+              background: rgba(0, 0, 0, 0.5);
+              border: none;
+              color: white;
+              font-size: 2em;
+              cursor: pointer;
+              padding: 10px;
+              border-radius: 50%;
+            }
+          
+            .video-controls button:hover {
+              background: rgba(0, 0, 0, 0.8);
+            }
           </style>
-
-
-
-
-
 
 
           <h2 style="text-align: center;" id="abstract">
