@@ -280,24 +280,30 @@
           </div>
           
           <script>
+            // 视频数据源，可以根据需要添加或删除
             const videoData = [
               './video/video1.mp4',
               './video/video2.mp4',
-              './video/video1.mp4',
-              './video/video2.mp4',
-              './video/video1.mp4'
+              './video/video3.mp4',
+              './video/video4.mp4',
+              './video/video5.mp4',
             ];
           
             const videoStrip = document.getElementById('videoStrip');
-            const videoWidth = 500;
-            const videoMargin = 15;
-            const itemFullWidth = videoWidth + videoMargin * 2;
-            const containerWidth = 730;
+            const videoWidth = 500; // 每个视频的固定宽度
+            const videoMargin = 15; // 视频之间的左右外边距
+            const containerWidth = 730; // 容器宽度
+            const itemFullWidth = videoWidth + videoMargin * 2; // 单个视频项的总宽度
           
-            let currentVideoIndex = 1; // 初始索引设为1，因为索引0是副本
+            // 初始索引从1开始，因为索引0是副本
+            let currentVideoIndex = 1;
+            let isMoving = false;
           
             // 1. 创建并添加视频元素到DOM
             function createVideoItems() {
+              // 确保真实视频数量大于1，否则无法实现循环
+              if (videoData.length <= 1) return;
+          
               // 添加最后一个视频的副本到开头
               const lastVideoClone = createVideoElement(videoData[videoData.length - 1]);
               videoStrip.appendChild(lastVideoClone);
@@ -311,8 +317,8 @@
               // 添加第一个视频的副本到结尾
               const firstVideoClone = createVideoElement(videoData[0]);
               videoStrip.appendChild(firstVideoClone);
-              
-              // 确保所有视频自动播放
+          
+              // 确保所有视频都自动播放
               document.querySelectorAll('.video-item').forEach(video => {
                 video.play();
               });
@@ -328,42 +334,103 @@
               return video;
             }
           
-            // 2. 移动轮播图
+            // 2. 移动轮播图的核心函数
             function moveCarousel(direction) {
-              // 禁用过渡效果，防止在重置位置时出现闪烁
-              videoStrip.style.transition = 'none';
+              // 避免在动画过程中重复点击
+              if (isMoving) return;
+              isMoving = true;
           
+              // 更新索引
               currentVideoIndex += direction;
-              
-              videoStrip.style.transform = `translateX(-${(currentVideoIndex) * itemFullWidth - (containerWidth - itemFullWidth) / 2}px)`;
           
-              // 3. 监听过渡结束事件，并在到达副本时重置位置
+              // 计算平移距离，这里无需判断索引是否越界
+              const offset = currentVideoIndex * itemFullWidth - (containerWidth - itemFullWidth) / 2;
+              videoStrip.style.transform = `translateX(-${offset}px)`;
+          
+              // 3. 监听动画结束事件，进行瞬时重置
               videoStrip.addEventListener('transitionend', () => {
+                // 禁用平滑过渡，为瞬时重置做准备
+                videoStrip.style.transition = 'none';
+          
                 if (currentVideoIndex === videoData.length + 1) {
                   // 到达结尾的副本，重置到真实的第一个视频
-                  videoStrip.style.transition = 'none';
                   currentVideoIndex = 1;
-                  videoStrip.style.transform = `translateX(-${(currentVideoIndex) * itemFullWidth - (containerWidth - itemFullWidth) / 2}px)`;
+                  videoStrip.style.transform = `translateX(-${currentVideoIndex * itemFullWidth - (containerWidth - itemFullWidth) / 2}px)`;
                 } else if (currentVideoIndex === 0) {
                   // 到达开头的副本，重置到真实的最后一个视频
-                  videoStrip.style.transition = 'none';
                   currentVideoIndex = videoData.length;
-                  videoStrip.style.transform = `translateX(-${(currentVideoIndex) * itemFullWidth - (containerWidth - itemFullWidth) / 2}px)`;
+                  videoStrip.style.transform = `translateX(-${currentVideoIndex * itemFullWidth - (containerWidth - itemFullWidth) / 2}px)`;
                 }
-              }, { once: true }); // 只监听一次
-              
-              // 在下一个事件循环中重新启用过渡
-              requestAnimationFrame(() => {
+          
+                // 在下一个事件循环中重新启用平滑过渡
+                requestAnimationFrame(() => {
                   videoStrip.style.transition = 'transform 0.5s ease-in-out';
+                  isMoving = false;
+                });
+              }, {
+                once: true
               });
             }
           
+            // 页面加载时执行
             window.onload = () => {
               createVideoItems();
               // 初始位置，让第一个真实视频居中
-              videoStrip.style.transform = `translateX(-${(currentVideoIndex) * itemFullWidth - (containerWidth - itemFullWidth) / 2}px)`;
+              const initialOffset = currentVideoIndex * itemFullWidth - (containerWidth - itemFullWidth) / 2;
+              videoStrip.style.transform = `translateX(-${initialOffset}px)`;
             };
           </script>
+          
+          <style>
+            /* 容器：限制可见区域 */
+            .video-carousel-container {
+              position: relative;
+              width: 730px;
+              height: auto;
+              overflow: hidden;
+              margin: 0 auto;
+            }
+          
+            /* 视频条带：所有视频的容器 */
+            .video-carousel-strip {
+              display: flex;
+              transition: transform 0.5s ease-in-out;
+            }
+          
+            /* 每个视频元素 */
+            .video-item {
+              width: 500px;
+              height: auto;
+              flex-shrink: 0;
+              margin: 0 15px;
+            }
+          
+            /* 切换按钮 */
+            .video-controls {
+              position: absolute;
+              top: 50%;
+              left: 0;
+              right: 0;
+              transform: translateY(-50%);
+              display: flex;
+              justify-content: space-between;
+              z-index: 10;
+            }
+          
+            .video-controls button {
+              background: rgba(0, 0, 0, 0.5);
+              border: none;
+              color: white;
+              font-size: 2em;
+              cursor: pointer;
+              padding: 10px;
+              border-radius: 50%;
+            }
+          
+            .video-controls button:hover {
+              background: rgba(0, 0, 0, 0.8);
+            }
+          </style>
           
           <style>
             /* 容器：限制可见区域，调整宽度以露出左右视频部分 */
