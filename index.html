@@ -385,23 +385,14 @@
           </style> -->
 
 
-          <div class="video-carousel-container">
-            <div class="video-carousel-strip" id="videoStrip">
-              </div>
-            <div class="video-controls">
-              <button onclick="moveCarousel(-1)">&#9664;</button>
-              <button onclick="moveCarousel(1)">&#9654;</button>
-            </div>
-          </div>
-          
           <script>
             // 视频数据源，可以根据需要添加或删除
             const videoData = [
               './video/video1.mp4',
               './video/video2.mp4',
-              './video/video1.mp4',
-              './video/video2.mp4',
-              './video/video1.mp4',
+              './video/video3.mp4',
+              './video/video4.mp4',
+              './video/video5.mp4',
             ];
           
             const videoStrip = document.getElementById('videoStrip');
@@ -414,31 +405,25 @@
             const containerWidth = videoWidth + (videoMargin * 2) + (visiblePartWidth * 2);
             const itemFullWidth = videoWidth + videoMargin * 2;
             const transitionDuration = 500; // 动画持续时间（毫秒）
-          
-            // 初始索引从1开始，因为索引0是副本
+            
             let currentVideoIndex = 1;
             let isMoving = false;
-          
+            
             // 1. 创建并添加视频元素到DOM
             function createVideoItems() {
-              // 确保真实视频数量大于1，否则无法实现循环
               if (videoData.length <= 1) return;
           
-              // 添加最后一个视频的副本到开头
               const lastVideoClone = createVideoElement(videoData[videoData.length - 1]);
               videoStrip.appendChild(lastVideoClone);
           
-              // 添加所有真实视频
               videoData.forEach(src => {
                 const videoEl = createVideoElement(src);
                 videoStrip.appendChild(videoEl);
               });
           
-              // 添加第一个视频的副本到结尾
               const firstVideoClone = createVideoElement(videoData[0]);
               videoStrip.appendChild(firstVideoClone);
           
-              // 确保所有视频都自动播放
               document.querySelectorAll('.video-item').forEach(video => {
                 video.play();
               });
@@ -461,29 +446,22 @@
               
               currentVideoIndex += direction;
           
-              // 计算平移距离
               const offset = currentVideoIndex * itemFullWidth - (containerWidth - itemFullWidth) / 2;
               videoStrip.style.transform = `translateX(-${offset}px)`;
           
-              // 监听动画结束事件，进行瞬时重置
               setTimeout(() => {
-                // 检查是否到达副本
                 if (currentVideoIndex === videoData.length + 1 || currentVideoIndex === 0) {
-                  // 禁用平滑过渡，为瞬时重置做准备
                   videoStrip.style.transition = 'none';
           
                   if (currentVideoIndex === videoData.length + 1) {
-                    // 到达结尾的副本，重置到真实的第一个视频
                     currentVideoIndex = 1;
                   } else if (currentVideoIndex === 0) {
-                    // 到达开头的副本，重置到真实的最后一个视频
                     currentVideoIndex = videoData.length;
                   }
                   
                   const resetOffset = currentVideoIndex * itemFullWidth - (containerWidth - itemFullWidth) / 2;
                   videoStrip.style.transform = `translateX(-${resetOffset}px)`;
                   
-                  // 在下一个事件循环中重新启用平滑过渡
                   requestAnimationFrame(() => {
                     videoStrip.style.transition = `transform ${transitionDuration}ms ease-in-out`;
                     isMoving = false;
@@ -496,7 +474,6 @@
           
             window.onload = () => {
               createVideoItems();
-              // 初始位置，让第一个真实视频居中
               const initialOffset = currentVideoIndex * itemFullWidth - (containerWidth - itemFullWidth) / 2;
               videoStrip.style.transform = `translateX(-${initialOffset}px)`;
             };
@@ -506,7 +483,7 @@
             /* 容器：限制可见区域 */
             .video-carousel-container {
               position: relative;
-              width: 730px;
+              width: 1060px; /* (800 + 15*2 + 200*2 = 1060) */
               height: auto;
               overflow: hidden;
               margin: 0 auto;
@@ -520,7 +497,7 @@
           
             /* 每个视频元素 */
             .video-item {
-              width: 800px;
+              width: 800px; /* 固定视频的宽度 */
               height: auto;
               flex-shrink: 0;
               margin: 0 15px;
