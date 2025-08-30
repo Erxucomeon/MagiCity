@@ -185,93 +185,6 @@
               <video class="video-item" controls muted loop>
                 <source src="./video/video1.mp4" type="video/mp4">
               </video>
-            </div>
-          </div>
-          
-          <script>
-            const videoStrip = document.getElementById('videoStrip');
-            const videos = document.querySelectorAll('.video-item');
-            const videoWidth = 400; // 调整后的宽度
-            let currentPosition = 0;
-            let isScrolling = false;
-          
-            videos.forEach(video => {
-              video.play();
-            });
-          
-            function updateScroll() {
-              videoStrip.style.transform = `translateX(${currentPosition}px)`;
-          
-              if (currentPosition < -videoWidth) {
-                const firstVideo = videoStrip.firstElementChild;
-                videoStrip.appendChild(firstVideo);
-                currentPosition += videoWidth;
-                videoStrip.style.transform = `translateX(${currentPosition}px)`;
-              } else if (currentPosition > 0) {
-                const lastVideo = videoStrip.lastElementChild;
-                videoStrip.prepend(lastVideo);
-                currentPosition -= videoWidth;
-                videoStrip.style.transform = `translateX(${currentPosition}px)`;
-              }
-              requestAnimationFrame(updateScroll);
-            }
-          
-            window.addEventListener('wheel', (e) => {
-              e.preventDefault(); // 阻止页面滚动
-          
-              isScrolling = true;
-              const direction = Math.sign(e.deltaY);
-              currentPosition -= direction * 50;
-            });
-          
-            setInterval(() => {
-              if (!isScrolling) {
-                const targetPosition = Math.round(currentPosition / videoWidth) * videoWidth;
-                currentPosition += (targetPosition - currentPosition) * 0.1;
-              }
-              isScrolling = false;
-            }, 100);
-          
-            updateScroll();
-          </script>
-          
-          <style>
-            .video-carousel-container {
-              width: 100%;
-              overflow: hidden;
-              white-space: nowrap;
-            }
-          
-            .video-carousel-strip {
-              display: flex;
-              will-change: transform;
-              transition: transform 0.1s ease-out;
-            }
-          
-            .video-item {
-              width: 800px;
-              height: auto;
-              margin: 0 15px;
-            }
-          </style> -->
-
-          <div class="video-carousel-container">
-            <div class="video-carousel-strip" id="videoStrip">
-              <video class="video-item" controls muted loop>
-                <source src="./video/video1.mp4" type="video/mp4">
-              </video>
-              <video class="video-item" controls muted loop>
-                <source src="./video/video2.mp4" type="video/mp4">
-              </video>
-              <video class="video-item" controls muted loop>
-                <source src="./video/video1.mp4" type="video/mp4">
-              </video>
-              <video class="video-item" controls muted loop>
-                <source src="./video/video2.mp4" type="video/mp4">
-              </video>
-              <video class="video-item" controls muted loop>
-                <source src="./video/video1.mp4" type="video/mp4">
-              </video>
               </div>
             <div class="video-controls">
               <button onclick="moveCarousel(-1)">&#9664;</button>
@@ -324,6 +237,117 @@
             /* 每个视频元素 */
             .video-item {
               width: 800px;
+              height: auto;
+              margin: 0 15px; /* 视频之间的间距 */
+            }
+          
+            /* 切换按钮 */
+            .video-controls {
+              position: absolute;
+              top: 50%;
+              left: 0;
+              right: 0;
+              transform: translateY(-50%);
+              display: flex;
+              justify-content: space-between;
+              pointer-events: none;
+            }
+          
+            .video-controls button {
+              pointer-events: auto;
+              background: rgba(0, 0, 0, 0.5);
+              border: none;
+              color: white;
+              font-size: 2em;
+              cursor: pointer;
+              padding: 10px;
+              border-radius: 50%;
+            }
+          
+            .video-controls button:hover {
+              background: rgba(0, 0, 0, 0.8);
+            }
+          </style> -->
+
+
+          <div class="video-carousel-container">
+            <div class="video-carousel-strip" id="videoStrip">
+              <video class="video-item" controls muted loop>
+                <source src="./video/video1.mp4" type="video/mp4">
+              </video>
+              <video class="video-item" controls muted loop>
+                <source src="./video/video2.mp4" type="video/mp4">
+              </video>
+              <video class="video-item" controls muted loop>
+                <source src="./video/video1.mp4" type="video/mp4">
+              </video>
+              <video class="video-item" controls muted loop>
+                <source src="./video/video2.mp4" type="video/mp4">
+              </video>
+              <video class="video-item" controls muted loop>
+                <source src="./video/video1.mp4" type="video/mp4">
+              </video>
+              </div>
+            <div class="video-controls">
+              <button onclick="moveCarousel(-1)">&#9664;</button>
+              <button onclick="moveCarousel(1)">&#9654;</button>
+            </div>
+          </div>
+          
+          <script>
+            const videoStrip = document.getElementById('videoStrip');
+            const videos = document.querySelectorAll('.video-item');
+            const videoWidth = 800; // 每个视频的宽度，需要与CSS保持一致
+            const videoMargin = 15; // 视频之间的间距，需要与CSS保持一致
+            let currentVideoIndex = 0;
+          
+            function moveCarousel(direction) {
+              currentVideoIndex += direction;
+          
+              if (currentVideoIndex < 0) {
+                currentVideoIndex = videos.length - 1;
+              } else if (currentVideoIndex >= videos.length) {
+                currentVideoIndex = 0;
+              }
+          
+              // 计算平移距离以使当前视频居中
+              const totalItemWidth = videoWidth + videoMargin * 2;
+              // 居中偏移量 = 移动的视频总宽度 - 容器的一半宽度 + 当前视频的一半宽度
+              const offset = currentVideoIndex * totalItemWidth;
+              
+              videoStrip.style.transform = `translateX(-${offset}px)`;
+            }
+            
+            // 页面加载后自动播放所有视频
+            window.onload = () => {
+              videos.forEach(video => {
+                video.play();
+              });
+            };
+          </script>
+          
+          <style>
+            /* 容器：限制可见区域 */
+            .video-carousel-container {
+              position: relative;
+              /* 容器的宽度，需要能容纳一个完整视频和两侧的视频部分 */
+              width: 800px;
+              height: auto;
+              overflow: hidden;
+              margin: 0 auto;
+            }
+          
+            /* 视频条带：所有视频的容器 */
+            .video-carousel-strip {
+              display: flex;
+              transition: transform 0.5s ease-in-out; /* 平滑的滑动效果 */
+              /* 初始偏移，使第一个视频居中并显示两侧视频 */
+              transform: translateX(calc(-50% + (500px / 2) + 15px));
+            }
+          
+            /* 每个视频元素 */
+            .video-item {
+              width: 800px; /* 固定视频的宽度 */
               height: auto;
               margin: 0 15px; /* 视频之间的间距 */
             }
