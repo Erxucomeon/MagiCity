@@ -272,21 +272,6 @@
 
           <div class="video-carousel-container">
             <div class="video-carousel-strip" id="videoStrip">
-              <video class="video-item" controls muted loop>
-                <source src="./video/video1.mp4" type="video/mp4">
-              </video>
-              <video class="video-item" controls muted loop>
-                <source src="./video/video2.mp4" type="video/mp4">
-              </video>
-              <video class="video-item" controls muted loop>
-                <source src="./video/video1.mp4" type="video/mp4">
-              </video>
-              <video class="video-item" controls muted loop>
-                <source src="./video/video2.mp4" type="video/mp4">
-              </video>
-              <video class="video-item" controls muted loop>
-                <source src="./video/video1.mp4" type="video/mp4">
-              </video>
               </div>
             <div class="video-controls">
               <button onclick="moveCarousel(-1)">&#9664;</button>
@@ -295,61 +280,113 @@
           </div>
           
           <script>
+            const videoData = [
+              './video/video1.mp4',
+              './video/video2.mp4',
+              './video/video1.mp4',
+              './video/video2.mp4',
+              './video/video1.mp4'
+            ];
+          
             const videoStrip = document.getElementById('videoStrip');
-            const videos = document.querySelectorAll('.video-item');
-            const videoWidth = 800; // 每个视频的宽度，需要与CSS保持一致
-            const videoMargin = 15; // 视频之间的间距，需要与CSS保持一致
-            let currentVideoIndex = 0;
+            const videoWidth = 500;
+            const videoMargin = 15;
+            const itemFullWidth = videoWidth + videoMargin * 2;
+            const containerWidth = 730;
           
-            function moveCarousel(direction) {
-              currentVideoIndex += direction;
+            let currentVideoIndex = 1; // 初始索引设为1，因为索引0是副本
           
-              if (currentVideoIndex < 0) {
-                currentVideoIndex = videos.length - 1;
-              } else if (currentVideoIndex >= videos.length) {
-                currentVideoIndex = 0;
-              }
+            // 1. 创建并添加视频元素到DOM
+            function createVideoItems() {
+              // 添加最后一个视频的副本到开头
+              const lastVideoClone = createVideoElement(videoData[videoData.length - 1]);
+              videoStrip.appendChild(lastVideoClone);
           
-              // 计算平移距离以使当前视频居中
-              const totalItemWidth = videoWidth + videoMargin * 2;
-              // 居中偏移量 = 移动的视频总宽度 - 容器的一半宽度 + 当前视频的一半宽度
-              const offset = currentVideoIndex * totalItemWidth;
+              // 添加所有真实视频
+              videoData.forEach(src => {
+                const videoEl = createVideoElement(src);
+                videoStrip.appendChild(videoEl);
+              });
+          
+              // 添加第一个视频的副本到结尾
+              const firstVideoClone = createVideoElement(videoData[0]);
+              videoStrip.appendChild(firstVideoClone);
               
-              videoStrip.style.transform = `translateX(-${offset}px)`;
-            }
-            
-            // 页面加载后自动播放所有视频
-            window.onload = () => {
-              videos.forEach(video => {
+              // 确保所有视频自动播放
+              document.querySelectorAll('.video-item').forEach(video => {
                 video.play();
               });
+            }
+          
+            function createVideoElement(src) {
+              const video = document.createElement('video');
+              video.className = 'video-item';
+              video.controls = true;
+              video.muted = true;
+              video.loop = true;
+              video.innerHTML = `<source src="${src}" type="video/mp4">`;
+              return video;
+            }
+          
+            // 2. 移动轮播图
+            function moveCarousel(direction) {
+              // 禁用过渡效果，防止在重置位置时出现闪烁
+              videoStrip.style.transition = 'none';
+          
+              currentVideoIndex += direction;
+              
+              videoStrip.style.transform = `translateX(-${(currentVideoIndex) * itemFullWidth - (containerWidth - itemFullWidth) / 2}px)`;
+          
+              // 3. 监听过渡结束事件，并在到达副本时重置位置
+              videoStrip.addEventListener('transitionend', () => {
+                if (currentVideoIndex === videoData.length + 1) {
+                  // 到达结尾的副本，重置到真实的第一个视频
+                  videoStrip.style.transition = 'none';
+                  currentVideoIndex = 1;
+                  videoStrip.style.transform = `translateX(-${(currentVideoIndex) * itemFullWidth - (containerWidth - itemFullWidth) / 2}px)`;
+                } else if (currentVideoIndex === 0) {
+                  // 到达开头的副本，重置到真实的最后一个视频
+                  videoStrip.style.transition = 'none';
+                  currentVideoIndex = videoData.length;
+                  videoStrip.style.transform = `translateX(-${(currentVideoIndex) * itemFullWidth - (containerWidth - itemFullWidth) / 2}px)`;
+                }
+              }, { once: true }); // 只监听一次
+              
+              // 在下一个事件循环中重新启用过渡
+              requestAnimationFrame(() => {
+                  videoStrip.style.transition = 'transform 0.5s ease-in-out';
+              });
+            }
+          
+            window.onload = () => {
+              createVideoItems();
+              // 初始位置，让第一个真实视频居中
+              videoStrip.style.transform = `translateX(-${(currentVideoIndex) * itemFullWidth - (containerWidth - itemFullWidth) / 2}px)`;
             };
           </script>
           
           <style>
-            /* 容器：限制可见区域 */
+            /* 容器：限制可见区域，调整宽度以露出左右视频部分 */
             .video-carousel-container {
               position: relative;
-              /* 容器的宽度，需要能容纳一个完整视频和两侧的视频部分 */
-              width: 800px;
+              width: 730px; 
               height: auto;
-              overflow: hidden;
-              margin: 0 auto;
+              overflow: hidden; 
+              margin: 0 auto; 
             }
           
             /* 视频条带：所有视频的容器 */
             .video-carousel-strip {
-              display: flex;
-              transition: transform 0.5s ease-in-out; /* 平滑的滑动效果 */
-              /* 初始偏移，使第一个视频居中并显示两侧视频 */
-              transform: translateX(calc(-50% + (500px / 2) + 15px));
+              display: flex; 
+              transition: transform 0.5s ease-in-out;
             }
           
             /* 每个视频元素 */
             .video-item {
-              width: 800px; /* 固定视频的宽度 */
+              width: 500px; 
               height: auto;
-              margin: 0 15px; /* 视频之间的间距 */
+              flex-shrink: 0; 
+              margin: 0 15px;
             }
           
             /* 切换按钮 */
@@ -361,7 +398,8 @@
               transform: translateY(-50%);
               display: flex;
               justify-content: space-between;
-              pointer-events: none;
+              pointer-events: none; 
+              z-index: 10;
             }
           
             .video-controls button {
