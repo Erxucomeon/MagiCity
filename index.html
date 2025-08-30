@@ -397,85 +397,73 @@
               <video class="video-item" controls muted loop>
                 <source src="./video/video1.mp4" type="video/mp4">
               </video>
-              </div>
+            </div>
           </div>
           
           <script>
             const videoStrip = document.getElementById('videoStrip');
             const videos = document.querySelectorAll('.video-item');
-            const videoWidth = 300; // 每个视频的宽度，需要和CSS中的.video-item .width匹配
+            const videoWidth = 400; // 调整后的宽度
             let currentPosition = 0;
             let isScrolling = false;
           
-            // 1. 自动播放所有视频
             videos.forEach(video => {
               video.play();
             });
           
-            // 2. 无限滚动逻辑
             function updateScroll() {
-              // 将条带的当前位置更新到CSS transform属性
               videoStrip.style.transform = `translateX(${currentPosition}px)`;
           
-              // 当条带向左移动超过一个视频宽度时，将最前面的视频移到最后面
               if (currentPosition < -videoWidth) {
                 const firstVideo = videoStrip.firstElementChild;
                 videoStrip.appendChild(firstVideo);
                 currentPosition += videoWidth;
-                // 重新调整位置以消除跳动
                 videoStrip.style.transform = `translateX(${currentPosition}px)`;
-              }
-              // 当条带向右移动超过一个视频宽度时，将最后面的视频移到最前面
-              else if (currentPosition > 0) {
+              } else if (currentPosition > 0) {
                 const lastVideo = videoStrip.lastElementChild;
                 videoStrip.prepend(lastVideo);
                 currentPosition -= videoWidth;
-                // 重新调整位置以消除跳动
                 videoStrip.style.transform = `translateX(${currentPosition}px)`;
               }
               requestAnimationFrame(updateScroll);
             }
           
-            // 3. 鼠标滚轮事件监听
             window.addEventListener('wheel', (e) => {
+              e.preventDefault(); // 阻止页面滚动
+          
               isScrolling = true;
-              const direction = Math.sign(e.deltaY); // -1 for up, 1 for down
-              currentPosition -= direction * 50; // 滚轮每次滚动50px
+              const direction = Math.sign(e.deltaY);
+              currentPosition -= direction * 50;
             });
           
-            // 4. 当滚动结束时，平滑回到整数倍位置
             setInterval(() => {
               if (!isScrolling) {
                 const targetPosition = Math.round(currentPosition / videoWidth) * videoWidth;
-                currentPosition += (targetPosition - currentPosition) * 0.1; // 缓动效果
+                currentPosition += (targetPosition - currentPosition) * 0.1;
               }
               isScrolling = false;
-            }, 100); // 每100毫秒检查一次滚动状态
+            }, 100);
           
-            // 启动滚动循环
             updateScroll();
           </script>
           
           <style>
-            /* 容器：限制可见区域 */
             .video-carousel-container {
               width: 100%;
-              overflow: hidden; /* 隐藏超出容器的视频 */
-              white-space: nowrap; /* 防止视频换行 */
+              overflow: hidden;
+              white-space: nowrap;
             }
           
-            /* 视频条带：所有视频的容器 */
             .video-carousel-strip {
-              display: flex; /* 让视频横向排列 */
-              will-change: transform; /* 提升动画性能 */
-              transition: transform 0.1s ease-out; /* 滚轮滚动时的平滑效果 */
+              display: flex;
+              will-change: transform;
+              transition: transform 0.1s ease-out;
             }
           
-            /* 每个视频元素 */
             .video-item {
-              width: 300px; /* 固定视频的宽度 */
+              width: 400px;
               height: auto;
-              margin: 0 10px; /* 视频之间的间距 */
+              margin: 0 15px;
             }
           </style>
 
