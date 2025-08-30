@@ -168,107 +168,6 @@
           <br>
     
 
-          <!-- <div class="video-carousel-container">
-            <div class="video-carousel-strip" id="videoStrip">
-              <video class="video-item" controls muted loop>
-                <source src="./video/video1.mp4" type="video/mp4">
-              </video>
-              <video class="video-item" controls muted loop>
-                <source src="./video/video2.mp4" type="video/mp4">
-              </video>
-              <video class="video-item" controls muted loop>
-                <source src="./video/video1.mp4" type="video/mp4">
-              </video>
-              <video class="video-item" controls muted loop>
-                <source src="./video/video2.mp4" type="video/mp4">
-              </video>
-              <video class="video-item" controls muted loop>
-                <source src="./video/video1.mp4" type="video/mp4">
-              </video>
-              </div>
-            <div class="video-controls">
-              <button onclick="moveCarousel(-1)">&#9664;</button>
-              <button onclick="moveCarousel(1)">&#9654;</button>
-            </div>
-          </div>
-          
-          <script>
-            const videoStrip = document.getElementById('videoStrip');
-            const videos = document.querySelectorAll('.video-item');
-            const videoWidth = 800; // 每个视频的宽度，需要与CSS保持一致
-            const videoMargin = 15; // 视频之间的间距，需要与CSS保持一致
-            let currentVideoIndex = 0;
-          
-            function moveCarousel(direction) {
-              currentVideoIndex += direction;
-          
-              if (currentVideoIndex < 0) {
-                currentVideoIndex = videos.length - 1;
-              } else if (currentVideoIndex >= videos.length) {
-                currentVideoIndex = 0;
-              }
-          
-              const offset = (videoWidth + videoMargin * 2) * currentVideoIndex;
-              videoStrip.style.transform = `translateX(-${offset}px)`;
-            }
-            
-            // 页面加载后自动播放所有视频
-            window.onload = () => {
-              videos.forEach(video => {
-                video.play();
-              });
-            };
-          </script>
-          
-          <style>
-            /* 容器：限制可见区域 */
-            .video-carousel-container {
-              position: relative;
-              width: 100%;
-              overflow: hidden;
-            }
-          
-            /* 视频条带：所有视频的容器 */
-            .video-carousel-strip {
-              display: flex;
-              transition: transform 0.5s ease-in-out; /* 平滑的滑动效果 */
-            }
-          
-            /* 每个视频元素 */
-            .video-item {
-              width: 800px;
-              height: auto;
-              margin: 0 15px; /* 视频之间的间距 */
-            }
-          
-            /* 切换按钮 */
-            .video-controls {
-              position: absolute;
-              top: 50%;
-              left: 0;
-              right: 0;
-              transform: translateY(-50%);
-              display: flex;
-              justify-content: space-between;
-              pointer-events: none;
-            }
-          
-            .video-controls button {
-              pointer-events: auto;
-              background: rgba(0, 0, 0, 0.5);
-              border: none;
-              color: white;
-              font-size: 2em;
-              cursor: pointer;
-              padding: 10px;
-              border-radius: 50%;
-            }
-          
-            .video-controls button:hover {
-              background: rgba(0, 0, 0, 0.8);
-            }
-          </style> -->
-
 
           <div class="video-carousel-container">
             <div class="video-carousel-strip" id="videoStrip">
@@ -284,9 +183,9 @@
             const videoData = [
               './video/video1.mp4',
               './video/video2.mp4',
-              './video/video3.mp4',
-              './video/video4.mp4',
-              './video/video5.mp4',
+              './video/video1.mp4',
+              './video/video2.mp4',
+              './video/video1.mp4',
             ];
           
             const videoStrip = document.getElementById('videoStrip');
