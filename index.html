@@ -384,15 +384,22 @@
             }
           </style> -->
 
-
+          <div class="video-carousel-container">
+            <div class="video-carousel-strip" id="videoStrip">
+              </div>
+            <div class="video-controls">
+              <button onclick="moveCarousel(-1)">&#9664;</button>
+              <button onclick="moveCarousel(1)">&#9654;</button>
+            </div>
+          </div>
           <script>
             // 视频数据源，可以根据需要添加或删除
             const videoData = [
               './video/video1.mp4',
               './video/video2.mp4',
-              './video/video3.mp4',
-              './video/video4.mp4',
-              './video/video5.mp4',
+              './video/video1.mp4',
+              './video/video2.mp4',
+              './video/video.mp4',
             ];
           
             const videoStrip = document.getElementById('videoStrip');
