@@ -405,9 +405,13 @@
             ];
           
             const videoStrip = document.getElementById('videoStrip');
-            const videoWidth = 800;
-            const videoMargin = 15;
-            const containerWidth = 730;
+            // --- 关键调整在这里！ ---
+            const videoWidth = 800; // 每个视频的固定宽度，与CSS保持一致
+            const videoMargin = 15; // 视频之间的左右外边距，与CSS保持一致
+            const visiblePartWidth = 200; // 左右各露出部分的宽度，你可以根据需要调整
+            // --- 关键调整结束！ ---
+            
+            const containerWidth = videoWidth + (videoMargin * 2) + (visiblePartWidth * 2);
             const itemFullWidth = videoWidth + videoMargin * 2;
             const transitionDuration = 500; // 动画持续时间（毫秒）
           
