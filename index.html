@@ -430,7 +430,8 @@
             createVideoItems();
             // 初始偏移量：第一个视频的宽度 + 左侧露出部分 + 间距的一半
             const initialOffset = (currentVideoIndex * itemTotalWidth);
-            videoStrip.style.transform = `translateX(calc(-${initialOffset}px + ${visiblePartWidth}px + ${videoGap / 2}px))`;
+            const centralOffset = initialOffset - (videoWidth / 2);
+            videoStrip.style.transform = `translateX(-${centralOffset}px)`;
         };
     </script>
     
