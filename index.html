@@ -337,7 +337,7 @@
     </div>
     
     <script>
-        // 视频数据源，可以根据需要添加或删除
+        // 视频数据源
         const videoData = [
             './video/video1.mp4',
             './video/video2.mp4',
@@ -347,24 +347,22 @@
         ];
     
         const videoStrip = document.getElementById('videoStrip');
-    
-        // --- 新的参数设置，更清晰地定义视频尺寸和间距 ---
-        const videoWidth = 800; // 每个视频的固定宽度
-        const videoGap = 30;    // 视频之间的间距
+        
+        // 关键参数，请在这里调整以改变视频大小和间距
+        const videoWidth = 800;
+        const videoGap = 30;
         const transitionDuration = 500;
-        // --- 参数设置结束！ ---
     
         let currentVideoIndex = 1;
         let isMoving = false;
     
-        // 1. 创建并添加视频元素到DOM
+        // 1. 创建视频元素并添加到DOM中
         function createVideoItems() {
             if (videoData.length === 0) return;
     
-            // 添加克隆元素以实现无缝循环
+            // 添加克隆元素以实现无缝循环效果
             const lastVideoClone = createVideoElement(videoData[videoData.length - 1]);
             const firstVideoClone = createVideoElement(videoData[0]);
-    
             videoStrip.appendChild(lastVideoClone);
             videoData.forEach(src => {
                 const videoEl = createVideoElement(src);
@@ -372,7 +370,7 @@
             });
             videoStrip.appendChild(firstVideoClone);
     
-            // 动态设置视频尺寸和间距，这样更灵活
+            // 动态设置视频的宽度和间距
             document.querySelectorAll('.video-item').forEach(video => {
                 video.style.width = `${videoWidth}px`;
                 video.style.marginRight = `${videoGap}px`;
@@ -380,6 +378,7 @@
             });
         }
     
+        // 创建单个视频元素
         function createVideoElement(src) {
             const video = document.createElement('video');
             video.className = 'video-item';
@@ -390,15 +389,15 @@
             return video;
         }
     
-        // 2. 移动轮播图的核心函数
+        // 2. 移动轮播图
         function moveCarousel(direction) {
             if (isMoving) return;
             isMoving = true;
     
             currentVideoIndex += direction;
-            // 核心改动：位移量只根据视频和间距计算
+            // 核心改动：仅根据视频和间距计算位移量
             const offset = currentVideoIndex * (videoWidth + videoGap);
-            videoStrip.style.transform = `translateX(calc(-${offset}px + 50vw - ${videoWidth / 2}px - ${videoGap / 2}px))`;
+            videoStrip.style.transform = `translateX(-${offset}px)`;
     
             setTimeout(() => {
                 if (currentVideoIndex === videoData.length + 1 || currentVideoIndex === 0) {
@@ -409,8 +408,7 @@
                         currentVideoIndex = videoData.length;
                     }
                     const resetOffset = currentVideoIndex * (videoWidth + videoGap);
-                    videoStrip.style.transform = `translateX(calc(-${resetOffset}px + 50vw - ${videoWidth / 2}px - ${videoGap / 2}px))`;
-    
+                    videoStrip.style.transform = `translateX(-${resetOffset}px)`;
                     requestAnimationFrame(() => {
                         videoStrip.style.transition = `transform ${transitionDuration}ms ease-in-out`;
                         isMoving = false;
@@ -423,34 +421,40 @@
     
         window.onload = () => {
             createVideoItems();
-            // 初始定位：使用 calc() 结合视口宽度进行完美居中
+            // 初始位移，保证居中
             const initialOffset = currentVideoIndex * (videoWidth + videoGap);
-            videoStrip.style.transform = `translateX(calc(-${initialOffset}px + 50vw - ${videoWidth / 2}px - ${videoGap / 2}px))`;
+            videoStrip.style.transform = `translateX(-${initialOffset}px)`;
         };
     </script>
     
     <style>
-        /* 容器：限制可见区域 */
+        /* 容器：限制可见区域并居中 */
         .video-carousel-container {
+            /*
+                这个宽度是关键！
+                它由：一个视频的宽度 + 左右两侧露出部分宽度 + 左右两侧间距 组成
+            */
+            width: 1260px; /* 800px (视频) + 200px (左露) + 200px (右露) + 30px (左间距) + 30px (右间距) = 1260px */
             position: relative;
             height: auto;
             overflow: hidden;
-            /* 使用 margin: 0 auto; 来居中整个容器 */
-            margin: 0 auto;
-            /* 容器宽度现在固定，或者使用百分比以适应不同屏幕 */
-            width: 100vw;
+            margin: 0 auto; /* 自动居中 */
         }
-    
+        
         /* 视频条带：所有视频的容器 */
         .video-carousel-strip {
             display: flex;
             transition: transform 0.5s ease-in-out;
+            /* 通过 transform 将整个条带向左移动，实现居中效果 */
+            transform: translateX(-230px); /* 初始位移：200px (左露) + 30px (间距) = 230px */
         }
     
         /* 每个视频元素 */
         .video-item {
+            width: 800px;
             height: auto;
             flex-shrink: 0;
+            margin-right: 30px;
         }
     
         /* 切换按钮 */
